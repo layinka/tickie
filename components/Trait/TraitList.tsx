@@ -38,7 +38,7 @@ const TraitList: FC<TraitListProps> = ({
     [supply],
   )
   return (
-    <SimpleGrid columns={{ base: 2, sm: 3 }} gap={3}>
+    <SimpleGrid columns={{ base: 1, sm: 1 }} gap={1}>
       {traits.map((trait, i) => (
         <Flex
           as={Link}

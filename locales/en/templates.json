@@ -21,8 +21,8 @@
       "explore": "Explore users"
     },
     "nfts": {
-      "title": "Notable NFTs",
-      "explore": "Explore NFTs"
+      "title": "Trending Events",
+      "explore": "Explore Events"
     },
     "resources": "Resources"
   },
@@ -36,8 +36,8 @@
     "nfts": {
       "filter": "Filters",
       "empty": {
-        "title": "No NFTs Found",
-        "description": "Update your filters to find more NFTs."
+        "title": "No Events Found",
+        "description": "Update your filters to find more Events."
       },
       "orderBy": {
         "label": "Sort by",

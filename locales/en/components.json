@@ -601,8 +601,8 @@
   "sales": {
     "direct": {
       "button": {
-        "place-bid": "Place a bid",
-        "buy": "Buy Collectible",
+        "place-bid": "Bid for Ticket",
+        "buy": "Buy Tickets",
         "view": "View Collectible"
       },
       "card-footer": {
@@ -778,7 +778,7 @@
       "minted_by": "Minted by",
       "owner": "Owner",
       "owners": "Owners",
-      "edition": "Edition",
+      "edition": "Tickets",
       "single": "Single"
     },
     "supply": {

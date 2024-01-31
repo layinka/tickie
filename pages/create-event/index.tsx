@@ -17,6 +17,7 @@ import {
   NumberInputField,
   VStack,
   Center,
+  useToast
 } from '@chakra-ui/react';
 
 import { HiExclamationCircle } from '@react-icons/all-files/hi/HiExclamationCircle'
@@ -29,6 +30,7 @@ import Head from '../../components/Head'
 import Image from '../../components/Image/Image'
 import Link from '../../components/Link/Link'
 import BackButton from '../../components/Navbar/BackButton'
+import useEnvironment from '../../hooks/useEnvironment'
 import { useFetchAllErc721And1155Query, useFetchCollectionsForMintQuery } from '../../graphql'
 import SmallLayout from '../../layouts/small'
 import { useQuery, gql } from '@apollo/client';
@@ -53,10 +55,10 @@ const Layout = ({ children }: { children: React.ReactNode }) => (
   </SmallLayout>
 )
 
-async function uploadToIpfs(helia:any,  metadata: any, gw3Client: GW3Client){
+async function uploadToIpfs(gw3Client: GW3Client,  metadata: any ){
   
 
-  var blob = new Blob([metadata], { type: 'application/json' });
+  var blob = new Blob([JSON.stringify( metadata)], { type: 'application/json' });
   var file = new File([blob], "metadata.json", {type: "application/json"});
 
   return new Promise((resolve,reject)=>{
@@ -69,8 +71,8 @@ async function uploadToIpfs(helia:any,  metadata: any, gw3Client: GW3Client){
         // After file is uploaded, pin the file using its CID.
         gw3Client.addPin(body.cid)    
           .then(() => {
-            console.log('File with CID ${body.cid} has been pinned successfully.')
-            resolve(cid);
+            console.log(`Metadata File with CID ${body.cid} has been pinned successfully.`)
+            resolve(body.cid);
           })    
           .catch((error: any) => {
             console.log(`Error in pinning file with CID ${body.cid}:`, error)
@@ -87,21 +89,8 @@ async function uploadToIpfs(helia:any,  metadata: any, gw3Client: GW3Client){
     gw3Client.uploadFile(file, hooks);
   })
 
+
   
-
-
-  // create a Helia node
-  
-  const j = json(helia)
-
-  const cid = await j.add(metadata, {
-    onProgress: (evt) => {
-      // console.info('adding metadata to  ipfs', evt.type, evt.detail)
-    }
-  })
-
-  console.log('metadat added to ipfs: ', cid.toString())
-  return cid.toString();
 }
 
 function createMetadata( eventData: {
@@ -158,7 +147,10 @@ function createMetadata( eventData: {
 
 const CreatePage: NextPage = () => {
   const { t } = useTranslation('templates')
-  const { back } = useRouter()
+  
+  const { GW3_API_KEY, GW3_API_SECRET } = useEnvironment()
+  const { back, push } = useRouter()
+  const toast = useToast()
 
   const [eventData, setEventData] = useState({
     title: 'Confluence 2024',
@@ -174,8 +166,6 @@ const CreatePage: NextPage = () => {
   const [heliaClient, setHeliaClient] = useState<any>();
 
   const [gw3Client,setGW3Client] = useState<GW3Client>();
-
-  
 
   // const { data } = useFetchCollectionsForMintQuery()
 
@@ -204,28 +194,28 @@ const CreatePage: NextPage = () => {
 
   useEffect(()=>{
 
-    let client = new GW3Client('5aa63a63-5df5-4ea5-9e8a-1646a4ec87c4', 'wVZtYcC8Bk1N8jiXRLQJKi2yDjCkNmo1H30I3UEh-b9teuQsbjdYzsulEeOayZOyQ-5e3O4MB25ai8addWh7hQ==');
+    let client = new GW3Client( GW3_API_KEY, GW3_API_SECRET);
     setGW3Client(client);
 
-    createHelia().then((helia)=>{
-      setHeliaClient(helia)
-      console.log('Helia done')
-    }).catch((err)=>{
-      console.error('Error initing Helia: ', err)
-    })
+    // createHelia().then((helia)=>{
+    //   setHeliaClient(helia)
+    //   console.log('Helia done')
+    // }).catch((err)=>{
+    //   console.error('Error initing Helia: ', err)
+    // })
     
   }, [])
   
-  useEffect(()=>{
-    console.log('Data is ', data)
-    if(collections){
-      const eventNFTAddress = collections.nodes[0].address;
-      console.log('eventNFTAddress is ', eventNFTAddress)
-    }
+  // useEffect(()=>{
+    
+  //   if(collections){
+  //     const eventNFTAddress = collections.nodes[0].address;
+  //     console.log('eventNFTAddress is ', eventNFTAddress)
+  //   }
 
-  }, [data])
+  // }, [data])
 
-  const {address, isConnected} = useAccount();
+  // const {address, isConnected} = useAccount();
 
    
 
@@ -236,6 +226,7 @@ const CreatePage: NextPage = () => {
     //  ^? const abi: readonly [{ name: "balanceOf"; type: "function"; stateMutability:...
     'function balanceOf(address owner) view returns (uint256)',
     'event Transfer(address indexed from, address indexed to, uint256 amount)',
+    'event TransferSingle(address indexed operator, address indexed from, address indexed to, uint256 id, uint256 value)',
     'function mint(uint ticketQuantity, string memory metadataUri) public payable'
   ])
   // console.log(erc1155ABI1, erc1155ABI)
@@ -274,16 +265,6 @@ const CreatePage: NextPage = () => {
       [name]: value,
     }));
 
-    // const { name, value, files } = e.target;
-
-    // // If it's a file input, use the selected file
-    // const newValue = name === 'image' ? files[0] : value;
-
-    // setEventData((prevData) => ({
-    //   ...prevData,
-    //   [name]: newValue,
-    // }));
-
   };
 
 
@@ -296,18 +277,37 @@ const CreatePage: NextPage = () => {
 
       const metadata = createMetadata(eventData);
 
-      const cidU = await uploadToIpfs(heliaClient, metadata);
-      console.log('CID returned is ', cidU)
+      const cidU = await uploadToIpfs(gw3Client, metadata);
+      
       setCid(cidU);
+      
 
-      console.log('CID in state is ', cid)
-
-      const ctrct = new ethers.Contract('0x7a36F00Eee656E1a1E0f6d6cC7Ec4A09D542a54f',erc1155ABI1,signer );
+      const ctrct = new ethers.Contract(collections.nodes[0].address,erc1155ABI1,signer );
 
       const tx = await ctrct.mint(BigNumber.from(eventData.numberOfTickets), `ipfs://${cidU}`, {
         value: ethers.utils.parseEther('0.00001')
       });
-      await tx.wait();
+      const txReceipt = await tx.wait();
+
+            
+
+      const tokenId = txReceipt.events?.filter((event: any)=>event.event=='TransferSingle')[0]?.args?.id
+
+      console.log('txReceipt: ', txReceipt.events)
+
+      console.log('txReceipt logs: ', txReceipt.events[0]?.logs)
+
+      console.log('tokenId: ', tokenId)
+
+      const assetId = `${collections.nodes[0].chainId}-${collections.nodes[0].address}-${tokenId.toString()}`
+
+      toast({
+        title: t('asset.form.notifications.created'),
+        status: 'success',
+      })
+      await push(`/tokens/${assetId}`)
+
+      
       // console.log('Write is ', write)
 
       // if(write){
@@ -338,13 +338,13 @@ const CreatePage: NextPage = () => {
   return (
     <Layout>
       <BackButton onClick={back} />
-      <Heading as="h1" variant="title" color="brand.black" mt={6}>
+      {/* <Heading as="h1" variant="title" color="brand.black" mt={6}>
         {t('asset.typeSelector.title')}
-      </Heading>
-      <Text as="p" variant="text" color="gray.500" mt={3}>
+      </Heading> */}
+      {/* <Text as="p" variant="text" color="gray.500" mt={3}>
         {t('asset.typeSelector.description')}
-      </Text>
-      <Flex
+      </Text> */}
+      {/* <Flex
         mt={12}
         flexWrap="wrap"
         justify="center"
@@ -419,12 +419,17 @@ const CreatePage: NextPage = () => {
             ),
           )
         )}
-      </Flex>
+      </Flex> */}
 
       <VStack spacing={4} align="start">
-        <Center>
-          <h1>Create Event</h1>
-        </Center>
+        <Heading as="h1" variant="title" color="brand.black" mt={6}>
+          {/* {t('asset.typeSelector.title')} */}
+          Create Event
+        </Heading>
+        <Text as="p" variant="text" color="gray.500" mt={3}>
+          The Tickets for this event will be minted as an NFT Collection.
+        </Text>
+        <br/>
         <form onSubmit={handleSubmit}>
           <FormControl>
             <FormLabel>Title</FormLabel>
@@ -494,6 +499,9 @@ const CreatePage: NextPage = () => {
               onChange={handleChange}
             /> */}
           </FormControl>
+
+          <br/><br/>
+
           <Button type="submit" colorScheme="blue">
             Create Event
           </Button>

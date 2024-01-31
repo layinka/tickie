@@ -266,9 +266,27 @@ const DetailPage: NextPage<Props> = ({ now: nowProp }) => {
                 </Stack>
               )}
 
+              {traits && (
+                <Stack spacing={3}>
+                  <Heading
+                    as="h4"
+                    variant="heading2"
+                    color="brand.black"
+                    pb={3}
+                  >
+                    {/* {t('asset.detail.traits')} */}
+                    Event Details
+                  </Heading>
+                  <Box borderRadius="2xl" p={3} borderWidth="1px">
+                    <TraitList asset={asset} traits={traits} />
+                  </Box>
+                </Stack>
+              )}
+
               <Stack spacing={3}>
                 <Heading as="h4" variant="heading2" color="brand.black">
-                  {t('asset.detail.details.title')}
+                  {/* {t('asset.detail.details.title')} */}
+                  NFT Details
                 </Heading>
                 <Stack
                   as="nav"
@@ -330,21 +348,7 @@ const DetailPage: NextPage<Props> = ({ now: nowProp }) => {
                 </Stack>
               </Stack>
 
-              {traits && (
-                <Stack spacing={3}>
-                  <Heading
-                    as="h4"
-                    variant="heading2"
-                    color="brand.black"
-                    pb={3}
-                  >
-                    {t('asset.detail.traits')}
-                  </Heading>
-                  <Box borderRadius="2xl" p={3} borderWidth="1px">
-                    <TraitList asset={asset} traits={traits} />
-                  </Box>
-                </Stack>
-              )}
+              
             </Stack>
 
             <Box overflow="hidden">

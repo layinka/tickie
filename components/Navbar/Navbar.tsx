@@ -135,7 +135,7 @@ const DrawerMenu: FC<{
             {/* <Link href="/drops">
               <NavItemMobile>{t('navbar.drops')}</NavItemMobile>
             </Link> */}
-            <Link href="/create">
+            <Link href="/create-event">
               <NavItemMobile>{t('navbar.create')}</NavItemMobile>
             </Link>
             {account ? (

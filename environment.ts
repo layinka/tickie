@@ -129,6 +129,10 @@ export type Environment = {
    */
   // Enable/disable the lazy minting feature. If enabled, the NFTs will be minted on the first sale
   LAZYMINT: boolean
+
+  GW3_API_KEY: string
+
+  GW3_API_SECRET: string
 }
 
 const cache = new LRUCache({
@@ -277,6 +281,9 @@ const getEnvironment = async (): Promise<Environment> => {
     META_KEYWORDS: metadata.META_KEYWORDS || name,
     // NFT Mint Behavior
     LAZYMINT: hasLazyMint,
+
+    GW3_API_KEY: process.env.gw3ApiKey || '',
+    GW3_API_SECRET: process.env.gw3ApiSecret || ''
   }
 }
 
