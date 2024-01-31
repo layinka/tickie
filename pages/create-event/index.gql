@@ -1,4 +1,4 @@
-query FetchCollectionsForMint {
+query FetchAllCollectionsForMint {
   collections(
     filter: {  }
     orderBy: CREATED_AT_ASC
