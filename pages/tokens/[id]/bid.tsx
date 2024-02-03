@@ -43,7 +43,7 @@ const BidPage: NextPage<Props> = ({ now }) => {
     },
   })
   const asset = data?.asset
-
+  console.log('chain :', chainId, 'data :', data)
   const onCreated = useCallback(async () => {
     toast({
       title: t('offers.bid.notifications.created'),

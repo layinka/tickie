@@ -117,6 +117,8 @@ const OfferFormBid: FC<Props> = ({ asset, currencies, onCreated }) => {
   })
 
   useEffect(() => {
+
+    console.log('currencies: ', currencies)
     const defaultCurrency = currencies[0]?.id
     if (defaultCurrency) setValue('currencyId', defaultCurrency)
     setValue('expiredAt', defaultExpirationValue)

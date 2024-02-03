@@ -558,14 +558,14 @@
         "quantity": {
           "label": "Quantity",
           "placeholder": "Enter quantity",
-          "suffix": "Edition"
+          "suffix": "Tickets"
         },
         "expiration": {
           "label": "Expiration date",
           "tooltip": "Your bid will be canceled at the end of the selected period. This prevent from long running and forgotten bids."
         },
-        "supply_one": "{{count}} edition available",
-        "supply_other": "{{count}} editions available"
+        "supply_one": "{{count}} ticket available",
+        "supply_other": "{{count}} tickets available"
       },
       "checkout": {
         "title": "Purchase Collectible",
@@ -578,14 +578,14 @@
         "quantity": {
           "label": "Quantity",
           "placeholder": "Enter amount",
-          "suffix": "Edition"
+          "suffix": "Ticket"
         },
         "ownership": {
           "title": "Automatic ownership transfer",
           "description": "Once you purchase an NFT, the ownership will automatically be transfer to you. There is no extra actions required on your side."
         },
-        "available_one": "{{count}} edition available",
-        "available_other": "{{count}} editions available"
+        "available_one": "{{count}} ticket available",
+        "available_other": "{{count}} tickets available"
       }
     }
   },
@@ -688,8 +688,8 @@
       },
       "card-footer": {
         "highest-bid": "Bid",
-        "open": "Open for bids",
-        "place-bid": "Place a bid",
+        "open": "On Sale",
+        "place-bid": "Bid for Ticket",
         "view": "View my NFT"
       },
       "info": {

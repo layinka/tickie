@@ -421,7 +421,7 @@ const CreatePage: NextPage = () => {
         )}
       </Flex> */}
 
-      <VStack spacing={4} align="start">
+      <VStack spacing={4} align="start" w="full">
         <Heading as="h1" variant="title" color="brand.black" mt={6}>
           {/* {t('asset.typeSelector.title')} */}
           Create Event
@@ -430,14 +430,15 @@ const CreatePage: NextPage = () => {
           The Tickets for this event will be minted as an NFT Collection.
         </Text>
         <br/>
-        <form onSubmit={handleSubmit}>
+        <form onSubmit={handleSubmit} >
           <FormControl>
-            <FormLabel>Title</FormLabel>
+            <FormLabel w="full">Title</FormLabel>
             <Input
               type="text"
               name="title"
               value={eventData.title}
               onChange={handleChange}
+              w="full"
             />
           </FormControl>
           <FormControl>

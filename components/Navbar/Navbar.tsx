@@ -463,7 +463,7 @@ const Navbar: FC<{
           </Flex> */}
           <Flex
             as={Link}
-            href="/create"
+            href="/create-event"
             color="brand.black"
             align="center"
             _hover={{ color: 'gray.500' }}

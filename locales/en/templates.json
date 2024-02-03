@@ -210,7 +210,7 @@
         "title": "Place a bid for {{name}}",
         "description": "Place a bid for {{name}} by {{creator}}"
       },
-      "title": "Place a Bid",
+      "title": "Bid for ticket",
       "notifications": {
         "created": "Your bid has been successfully placed."
       },
